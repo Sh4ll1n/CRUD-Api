@@ -27,24 +27,25 @@ function getData() {
     }else{
         insertStudent(prenom,nom,email)
     }
-
 }
 
 function insertStudent(firstname, lastname,mail) {
     //VERSION CHAIMA
     // var table = document.getElementsByTagName('table')[0];
     // var nouvelleLigne = table.insertRow(table.rows.length);
-
+$('.envoie').text("AJout");
     var table = document.querySelector('.table');
     var nouvelleLigne = table.insertRow();
 
     console.log(table.rows.length);
 
-    nouvelleLigne.insertCell(0).innerHTML = table.rows.length-1;
+    var compteur = table.rows.length-1;
+
+    nouvelleLigne.insertCell(0).innerHTML = compteur;
     nouvelleLigne.insertCell(1).innerHTML = firstname;
     nouvelleLigne.insertCell(2).innerHTML = lastname;
     nouvelleLigne.insertCell(3).innerHTML = mail;
-    nouvelleLigne.insertCell(4).innerHTML = "<i class='bi bi-pencil-square'></i>";
+    nouvelleLigne.insertCell(4).innerHTML = "<i class='bi bi-pencil-square' id='"+compteur+"' onclick='modif(this);'></i>";
     nouvelleLigne.insertCell(5).innerHTML = "<i class='bi bi-trash'></i>";
 }
 
@@ -63,4 +64,19 @@ function verifMail(email) {
             return false;
         }
     }
+}
+
+function modif(params) {
+     var table = $('.table tr')[params.id];
+
+     $('#prenom').val(table.cells[1].innerHTML)
+     $('#nom').val(table.cells[2].innerHTML)
+     $('#email').val(table.cells[3].innerHTML)
+
+     //table.remove();
+
+     //VERSION QUENTIN
+    //  $('#prenom').val($(table.cells[1]).text())
+    //  $('#nom').val($(table.cells[2]).text())
+    //  $('#email').val($(table.cells[3]).text())
 }
