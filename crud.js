@@ -10,30 +10,27 @@ $(document).ready(function () {
         $('.liste').show();
         
         $('input').val('');
-
-        //AUTRE VERSION
-        //$("form").get(0).reset()
+        chercher();
+        
     })
-})
+});
 
 function getData() {
-    var prenom  = document.querySelector('#prenom').value;
-    var nom  = document.querySelector('#nom').value;
-    var email  = document.querySelector('#email').value;
+    var food  = document.querySelector('#food').value;
+    var grammes  = document.querySelector('#gr').value;
+    
 
-    if (verifMail(email) == false) {
-        $('.erreur').html('Le mail existe deja');
+    if (verifFood(food) == false) {
+        $('.erreur').html('Tu as deja entrer cet aliment');
         $('.erreur').removeClass('d-none');
     }else{
-        insertStudent(prenom,nom,email)
+        insertFood(food,grammes)
     }
-}
+};
 
-function insertStudent(firstname, lastname,mail) {
-    //VERSION CHAIMA
-    // var table = document.getElementsByTagName('table')[0];
-    // var nouvelleLigne = table.insertRow(table.rows.length);
-$('.envoie').text("AJout");
+function insertFood(food,grammes) {
+    
+    $('.envoie').text("Ajout");
     var table = document.querySelector('.table');
     var nouvelleLigne = table.insertRow();
 
@@ -42,41 +39,54 @@ $('.envoie').text("AJout");
     var compteur = table.rows.length-1;
 
     nouvelleLigne.insertCell(0).innerHTML = compteur;
-    nouvelleLigne.insertCell(1).innerHTML = firstname;
-    nouvelleLigne.insertCell(2).innerHTML = lastname;
-    nouvelleLigne.insertCell(3).innerHTML = mail;
-    nouvelleLigne.insertCell(4).innerHTML = "<i class='bi bi-pencil-square' id='"+compteur+"' onclick='modif(this);'></i>";
-    nouvelleLigne.insertCell(5).innerHTML = "<i class='bi bi-trash'></i>";
-}
+    nouvelleLigne.insertCell(1).innerHTML = food;
+    nouvelleLigne.insertCell(2).innerHTML = grammes;
+    //nouvelleLigne.insertCell(3).innerHTML = Proteines;
+    //nouvelleLigne.insertCell(4).innerHTML = Glucides;
+    //nouvelleLigne.insertCell(5).innerHTML = Lipides;
+    nouvelleLigne.insertCell(3).innerHTML = "<i class='bi bi-pencil-square' id='"+compteur+"' onclick='modif(this);'></i>";
+    nouvelleLigne.insertCell(4).innerHTML = "<i class='bi bi-trash' id='"+compteur+"' onclick='suppr(this);'></i>";
+};
 
 
 //Verification email
 
-function verifMail(email) {
+function verifFood(food) {
     var table = document.querySelector('.table');
 
     var nbreLigne = table.rows.length;
 
     for (let index = 1; index < nbreLigne; index++) {
-        var email_liste = table.getElementsByTagName('tr')[index].cells[3].innerHTML;
+        var aliment_liste = table.getElementsByTagName('tr')[index].cells[1].innerHTML;
     
-        if (email_liste == email) {
+        if (aliment_liste == food) {
             return false;
         }
     }
-}
+};
 
 function modif(params) {
      var table = $('.table tr')[params.id];
 
-     $('#prenom').val(table.cells[1].innerHTML)
-     $('#nom').val(table.cells[2].innerHTML)
-     $('#email').val(table.cells[3].innerHTML)
+     $('#food').val(table.cells[1].innerHTML)
+     table.remove();
 
-     //table.remove();
+     
+};
 
-     //VERSION QUENTIN
-    //  $('#prenom').val($(table.cells[1]).text())
-    //  $('#nom').val($(table.cells[2]).text())
-    //  $('#email').val($(table.cells[3]).text())
-}
+
+function chercher(){
+    var food = $('#food').val();
+    console.log(food);
+    $.ajax({
+        //url:"https://www.data.gouv.fr/fr/datasets/r/f376ba2b-77da-4309-8fc2-413faaa8a122",
+        url:"https://world.openfoodfacts.org/api/v0/product/737628064502.json",
+        dataType:'json',
+        success:function (data){
+            console.log(data);   
+        },
+        error:function(xhr){
+            console.log(xhr.status);
+        }
+    })
+};
